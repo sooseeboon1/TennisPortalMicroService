@@ -1,0 +1,3 @@
+kubectl get pods
+kubectl describe pod <pod_name>
+kubectl port-forward <pod_name> 7777:3000 <-- Port forward from 7777(local host) to 3000(in pod)
