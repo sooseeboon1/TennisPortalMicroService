@@ -1,0 +1,75 @@
+docker ps
+docker ps -a <-- include exit container
+docker images
+docker stop <container_id>
+docker rm <container_id>
+docker rmi <image_id>
+docker build -t vnfm:1 . <-- Build the docker image (Dockerfile in current directory)
+docker run -d -p 80:8080 vnfm:1 <-- 8080 is container port
+docker exec -it boring_noyce /bin/sh <-- Get into docker container. (boring_noyce  is name)
+docker rm $(docker ps -a -q) <-- Delete all containers. (Will not delete if it is running). Also this command must be run inside cywin in window.
+docker build -t <name of image> .
+
+Stop all dockers and remove all images
+This must be run in cywin(not window)
+docker stop $(docker ps -a -q) 
+docker rm $(docker ps -a -q)
+ 
+Delete all images 
+docker rmi -f $(docker images -q)
+
+docker logs <name_of_container>
+
+Example of Dockerfile
+FROM openjdk:8-jdk-alpine
+MAINTAINER See Boon Soo
+ARG JAR_FILE=./vnfm.jar
+WORKDIR /opt/app
+COPY ${JAR_FILE} vnfm.jar 
+ENTRYPOINT ["java", "-jar", "vnfm.jar"]
+
+ARG JAR_FILE=./vnfm.war
+WORKDIR /usr/local/tomcat/webapps
+COPY ${JAR_FILE} vnfm.war
+
+
+1) tomcat:latest <-- need to rename webapps.dist to weapps and touch index.html
+
+
+Steps to deploy springboot to war instead of jar
+Step1:
+Add/Update the following dependency to pom.xml (scope as provided) in order to tell Spring Boot not to use its embedded Tomcat.
+
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-tomcat</artifactId>
+    <scope>provided</scope>
+</dependency>
+Step2:
+<properties>
+      <packaging>war</packaging>
+</properties>
+Step3:
+SpringBootApplication class should look like below:
+
+@SpringBootApplication
+public class Application extends SpringBootServletInitializer {
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+        return application.sources(Application.class);
+    }
+
+    public static void main(String[] args) throws Exception {
+        SpringApplication.run(Application.class, args);
+    }
+
+}
+
+docker ps -a -q       <-- (quite. Display only ID)
+docker rm $(docker ps -a -q)
+
+the input device is not a TTY.  If you are using mintty, try prefixing the command with 'winpty'
+This mean we can't exec in cywin. Need to use regular Command Prompt.
+
+
