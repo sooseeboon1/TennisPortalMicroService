@@ -1,3 +1,58 @@
 kubectl get pods
 kubectl describe pod <pod_name>
-kubectl port-forward <pod_name> 7777:3000 <-- Port forward from 7777(local host) to 3000(in pod)
+kubectl port-forward pod/<pod_name> 7777:3000 <-- Port forward from 7777(local host) to 3000(in pod). http://localhost:7777 if run in minikube
+kubectl port-forward pod/service
+kubectl port-forward pod/deployment 
+kubectl expose pod <pod_name> <-- Expose pod to the host. <--- Not working on my minikube.
+kubectl exec <pod_name> -- <command to run> ex: kubectl exec my_pod -- ls <-- This will run ls on the pod.
+kubectl run -i --tty busybox --image=busybox -- sh <-- Run busy box iteratively
+kubectl exec -it busybox-686489489-v29vj -- /bin/sh <-- get into busy box
+kubectl logs <pod>
+containers within pod can communicate  with each other via localhost
+pod and pod could communicate with each other via cluster ip.
+kube-proxy feedbs what pods available to iptable.
+
+
+Pod Template:
+apiVersion:
+kind:Pod
+metadata: 
+   <Information about pod>
+spec:  
+   containers: 
+   <Container information>
+      containerPort: 3000 <-- Port that container bind to
+      
+Service Template:
+apiVersion:
+kind: Service
+metadata:
+  <information about service>
+spec:
+  ports: 
+    port: 80 <-- This is the port this service bind to in the host
+    targetPort: 3000 <-- This is the port in the container
+  selector: <-- This is the selector used to select the pod
+  type: LoadBalance  
+ 
+ 
+kind: Service
+apiVersion: v1
+metadata:
+  name: port-example-svc
+spec:
+  # Make the service externally visible via the node
+  type: NodePort 
+
+  ports:
+    # Which port on the node is the service available through?
+    - nodePort: 31234
+
+    # Inside the cluster, what port does the service expose?
+    - port: 8080
+
+    # Which port do pods selected by this service expose?
+    - targetPort: 
+    
+    
+    
