@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tennis-portal-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tennis-portal-service
+  template:
+    metadata:
+      labels:
+        app: tennis-portal-service
+    spec:
+      containers:
+      - name: tennis-portal-service
+        image: sooseeboon/tennis_portal_service:2
+        ports:
+        - name: tps-port
+          containerPort: 8889
+        env:
+        - name: eureka.client.service-url.defaultZone
+          value: "http://eureka-server-service:31002/eureka/"
+        - name: spring.cloud.config.uri
+          value: "http://config-server-service:31001"
+

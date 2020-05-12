@@ -11,7 +11,8 @@ kubectl logs <pod>
 containers within pod can communicate  with each other via localhost
 pod and pod could communicate with each other via cluster ip.
 kube-proxy feedbs what pods available to iptable.
-
+kubectl edit <name> -- To edit the resouces.
+kubectl scale --replicas=1 -f config_server_deployment.yml <-- scale to one
 
 Pod Template:
 apiVersion:
@@ -54,5 +55,24 @@ spec:
     # Which port do pods selected by this service expose?
     - targetPort: 
     
+    
+    
+Configuration file:
+
+metadata:
+ name:
+ label:
+Spec:
+ selector: <-- attributes are specific to what kind
+ template: <-- Template laos has it owns metadata, spec and status
+Status:
+ <-- Status are updated by Kubernetes get from etcd
+ 
+ 
+ service used the labels from deployments to pods.
+ 
+ 
+
+
     
     
