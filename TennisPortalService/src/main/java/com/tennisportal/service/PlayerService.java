@@ -1,6 +1,7 @@
 package com.tennisportal.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,11 +19,16 @@ public class PlayerService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	@Value("${player.service.url}")
+	String playerServiceUrl;
+	
 	// threadPoolKey is used for bulkhead design pattern.
 	@HystrixCommand(fallbackMethod = "getPlayersFallBack", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "getPlayerThreadPool")
 	public ResponseEntity<Players> getPlayers() {
-		ResponseEntity<Players> responseEntity = restTemplate.getForEntity("http://player-service/tennisportal/players/", Players.class);
+		String url =  playerServiceUrl + "/tennisportal/players/";
+		System.out.println("Player service URL is "  + url);
+		ResponseEntity<Players> responseEntity = restTemplate.getForEntity(url, Players.class);
 		return responseEntity;
 	}
 	
@@ -40,7 +46,7 @@ public class PlayerService {
 	@HystrixCommand(fallbackMethod = "getPlayerFallBack", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "getPlayerThreadPool")
 	public ResponseEntity<Player> getPlayer(@PathVariable Long playerId) {		
-		 ResponseEntity<Player> responseEntity = restTemplate.getForEntity("http://player-service/tennisportal/players/" + playerId, Player.class);
+		 ResponseEntity<Player> responseEntity = restTemplate.getForEntity(playerServiceUrl + "/tennisportal/players/" + playerId, Player.class);
 		 return responseEntity;
 	}
 	
@@ -56,7 +62,7 @@ public class PlayerService {
 	@HystrixCommand(fallbackMethod = "savePlayerFallBack", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "savePlayerThreadPool")
 	public ResponseEntity<Player> savePlayer(@RequestBody Player player) {		
-		ResponseEntity<Player> responseEntity = restTemplate.postForEntity("http://player-service/tennisportal/players/", player, Player.class);
+		ResponseEntity<Player> responseEntity = restTemplate.postForEntity(playerServiceUrl + "/tennisportal/players/", player, Player.class);
 		return responseEntity;
 	}
 		

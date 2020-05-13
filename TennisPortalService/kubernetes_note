@@ -4,7 +4,7 @@ kubectl port-forward pod/<pod_name> 7777:3000 <-- Port forward from 7777(local h
 kubectl port-forward pod/service
 kubectl port-forward pod/deployment 
 kubectl expose pod <pod_name> <-- Expose pod to the host. <--- Not working on my minikube.
-kubectl exec <pod_name> -- <command to run> ex: kubectl exec my_pod -- ls <-- This will run ls on the pod.
+kubectl exec -it <pod_name> -- <command to run> ex: kubectl exec my_pod -- ls <-- This will run ls on the pod.
 kubectl run -i --tty busybox --image=busybox -- sh <-- Run busy box iteratively
 kubectl exec -it busybox-686489489-v29vj -- /bin/sh <-- get into busy box
 kubectl logs <pod>
@@ -13,8 +13,9 @@ pod and pod could communicate with each other via cluster ip.
 kube-proxy feedbs what pods available to iptable.
 kubectl edit <name> -- To edit the resouces.
 kubectl scale --replicas=1 -f config_server_deployment.yml <-- scale to one
+kubectl logs --follow pod/player-service-deployment-f4f4b884-2pplp <-- tail the log
 
-Pod Template:
+Pod Template:  
 apiVersion:
 kind:Pod
 metadata: 

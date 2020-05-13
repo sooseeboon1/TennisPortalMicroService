@@ -39,7 +39,9 @@ public class PlayerController {
 
 	@GetMapping("/players")
 	public ResponseEntity<Players> getPlayers() {
+		System.out.print("get player");
 		Players players = playerService.getPlayers();
+		players.getPlayers().forEach( player -> {System.out.println(player.getName());});
 		return ResponseEntity.ok(players);
 	}
 	
