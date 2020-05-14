@@ -1,29 +1,29 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: tennis-portal-service-deployment
+  name: lesson-service-deployment
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: tennis-portal-service
+      app: lesson-service
   template:
     metadata:
       labels:
-        app: tennis-portal-service
+        app: lesson-service
     spec:
       containers:
-      - name: tennis-portal-service
-        image: sooseeboon/tennis_portal_service:5
-        
+      - name: lesson-service
+        image: sooseeboon/lesson_service:5
         ports:
-        - name: tps-port
-          containerPort: 8889
+        - name: lesson-port
+          containerPort: 8883
         env:
+        - name: spring.datasource.url
+          value: "jdbc:mysql://mysql-service:31004/Tennis?createDatabaseIfNotExist=true&useSSL=true"
         - name: eureka.client.service-url.defaultZone
           value: "http://eureka-server-service:31002/eureka/"
         - name: spring.cloud.config.uri
           value: "http://config-server-service:31001"
-        - name: player.service.url
-          value: "http://player-service:31006"
+
 

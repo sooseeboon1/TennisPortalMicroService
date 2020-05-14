@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: player-service
-        image: sooseeboon/player_service:1
+        image: sooseeboon/player_service:5
         ports:
         - name: player-port
           containerPort: 8883
