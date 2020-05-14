@@ -1,5 +1,7 @@
 package com.tennisportal.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import com.tennisportal.model.Players;
 
 @Service
 public class PlayerService {
+	Logger logger = LoggerFactory.getLogger(PlayerService.class);
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -27,14 +30,14 @@ public class PlayerService {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "getPlayerThreadPool")
 	public ResponseEntity<Players> getPlayers() {
 		String url =  playerServiceUrl + "/tennisportal/players/";
-		System.out.println("Player service URL is "  + url);
+		logger.debug("URL to player service is " + url);	
 		ResponseEntity<Players> responseEntity = restTemplate.getForEntity(url, Players.class);
 		return responseEntity;
 	}
 	
 	public ResponseEntity<Players> getPlayersFallBack() {		
 		Player player = new Player();
-		player.setName("Mr.NoName");
+		player.setName("Players from fallback method");
 		player.setId(new Long(1));
 		Players players = new Players();
 		players.getPlayers().add(player);
@@ -46,13 +49,15 @@ public class PlayerService {
 	@HystrixCommand(fallbackMethod = "getPlayerFallBack", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "getPlayerThreadPool")
 	public ResponseEntity<Player> getPlayer(@PathVariable Long playerId) {		
-		 ResponseEntity<Player> responseEntity = restTemplate.getForEntity(playerServiceUrl + "/tennisportal/players/" + playerId, Player.class);
-		 return responseEntity;
+		String url =  playerServiceUrl + "/tennisportal/players/";
+		logger.debug("URL to player service is " + url);	
+		ResponseEntity<Player> responseEntity = restTemplate.getForEntity(url + playerId, Player.class);
+		return responseEntity;
 	}
 	
 	public ResponseEntity<Player> getPlayerFallBack(Long playerId)  {		
 		Player player = new Player();
-		player.setName("Mr.NoName");
+		player.setName("Player from fallback");
 		player.setId(new Long(1));
 		return ResponseEntity.ok(player);
 		
@@ -61,12 +66,14 @@ public class PlayerService {
 	// threadPoolKey is used for bulkhead design pattern.
 	@HystrixCommand(fallbackMethod = "savePlayerFallBack", commandProperties = {
 			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") }, threadPoolKey = "savePlayerThreadPool")
-	public ResponseEntity<Player> savePlayer(@RequestBody Player player) {		
-		ResponseEntity<Player> responseEntity = restTemplate.postForEntity(playerServiceUrl + "/tennisportal/players/", player, Player.class);
+	public ResponseEntity<Player> savePlayer(@RequestBody Player player) {	
+		String url =  playerServiceUrl + "/tennisportal/players/";
+		logger.debug("URL to player service is " + url);	
+		ResponseEntity<Player> responseEntity = restTemplate.postForEntity(url, player, Player.class);
 		return responseEntity;
 	}
 		
 	public ResponseEntity<Player> savePlayerFallBack(@RequestBody Player player) throws Exception {
-		throw new Exception("Failed to save");
+		throw new Exception("Failed to save player");
 	}
 }

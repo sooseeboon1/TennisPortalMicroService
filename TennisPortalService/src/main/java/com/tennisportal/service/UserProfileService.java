@@ -1,5 +1,7 @@
 package com.tennisportal.service;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,7 @@ import com.tennisportal.model.UserProfile;
 
 @Service
 public class UserProfileService {
-		
+	Logger logger = LoggerFactory.getLogger(UserProfileService.class);
 	
 	@Autowired
 	private LessonService lessonService;
@@ -28,7 +30,17 @@ public class UserProfileService {
 	
 	public  ResponseEntity<UserProfile> getUserProfile() {
 		ResponseEntity<Lessons> lessons = lessonService.getLessons();
-		ResponseEntity<Players> players = playerService.getPlayers();				
+//		logger.debug("Response from lesson service");
+//		lessons.getBody().getLessons().forEach( lesson -> {
+//			logger.debug(lesson.getName());
+//		});
+		
+//		logger.debug("Response from player service");
+		ResponseEntity<Players> players = playerService.getPlayers();	
+//		lessons.getBody().getLessons().forEach( player -> {
+//			logger.debug(player.getName());
+//		});
+		
 		UserProfile userProfile = new UserProfile();
 		userProfile.setLessons(lessons.getBody());
 		userProfile.setOpponents(players.getBody());
