@@ -2,6 +2,7 @@ docker ps
 docker ps -a <-- include exit container
 docker images
 docker stop <container_id>
+docker start <container_id>
 docker rm <container_id>
 docker rmi <image_id>
 docker build -t vnfm:1 . <-- Build the docker image (Dockerfile in current directory)
@@ -9,6 +10,14 @@ docker run -d -p 80:8080 vnfm:1 <-- 8080 is container port
 docker exec -it boring_noyce /bin/sh <-- Get into docker container. (boring_noyce  is name)
 docker rm $(docker ps -a -q) <-- Delete all containers. (Will not delete if it is running). Also this command must be run inside cywin in window.
 docker build -t <name of image> .
+
+
+To run docker in google platform cloud:
+docker run -it --rm -p 5000:8081 sooseeboon/mainservice:1
+And then could view it with 5000.
+
+
+
 
 Stop all dockers and remove all images
 This must be run in cywin(not window)

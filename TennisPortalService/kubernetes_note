@@ -1,9 +1,9 @@
 kubectl get pods
 kubectl describe pod <pod_name>
 kubectl port-forward pod/<pod_name> 7777:3000 <-- Port forward from 7777(local host) to 3000(in pod). http://localhost:7777 if run in minikube
-kubectl port-forward pod/service
-kubectl port-forward pod/deployment 
-kubectl expose pod <pod_name> <-- Expose pod to the host. <--- Not working on my minikube.
+kubectl port-forward service/<service_name>
+kubectl port-forward deployment <deployment_name>
+kubectl expose pod <pod_name> <-- Expose pod to the host. <--- Not working on my minikube.go
 kubectl exec -it <pod_name> -- <command to run> ex: kubectl exec my_pod -- ls <-- This will run ls on the pod.
 kubectl run -i --tty busybox --image=busybox -- sh <-- Run busy box iteratively
 kubectl exec -it busybox-686489489-v29vj -- /bin/sh <-- get into busy box
